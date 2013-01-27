@@ -73,25 +73,15 @@ double evaluatePolynomial (TermElement* root, double x) {
 }
 
 TermElement* derivative (TermElement* root) {
-    TermElement* deriv = (TermElement*) malloc(sizeof(TermElement)); // start derivative list
-    deriv->coefficient = root->coefficient * root->degree; // populate first derivative term
-    deriv->degree = root->degree - 1;
-    TermElement* cur = deriv; // set it to cur for the loop
-    root = root->next;
-    while (root != NULL) { // for each term in the original polynomial, takes it derivative
-        TermElement* next = (TermElement*) malloc(sizeof(TermElement));
-        next->coefficient = root->coefficient * root->degree; // populate derivative term
-        if (next->coefficient == 0) { // do not add terms with coefficients of 0
-            free(next);
-            root = root->next;
-            break;
-        }
-        next->degree = root->degree - 1;
-        cur->next = next; // add it to our list
-        cur = next; // get ready for next term
+    if (root == NULL)
+        return NULL;
+    TermElement* deriv = addTerm(NULL, root->degree-1, root->coefficient * root->degree); // start derivative list
+    while (root->next != NULL) { // for each term in the original polynomial, takes it derivative
         root = root->next;
+        if (root->coefficient * root->degree != 0) { // only create a non-trivial node (coefficient != 0)
+            deriv = addTerm(deriv, root->degree-1, root->coefficient * root->degree);
+        }
     }
-    cur->next = NULL; // end our list
     return deriv; //return our list
 }
 
