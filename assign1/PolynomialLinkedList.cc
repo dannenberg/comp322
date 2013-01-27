@@ -114,10 +114,10 @@ TermElement* derivative (TermElement* root) {
 }
 
 void printPolyNomial(TermElement* root) {
-    cout << "Coefficient | Degree" << endl 
+    cout << "Degree | Coefficient" << endl 
          << "--------------------" << endl; // print table header
     while (root != NULL) {
-        cout << setw(12) << root->coefficient << '|' << root->degree << endl; // print value for each entry setw sets field size
+        cout << setw(7) << root->degree << '|' << setw(12) << root->coefficient << endl; // print value for each entry setw sets field size
         root = root->next;
     }
     cout << endl;
