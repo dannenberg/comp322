@@ -73,6 +73,33 @@ double evaluatePolynomial (TermElement* root, double x) {
     return total;
 }
 
+TermElement* addPolynomials (TermElement* root1, TermElement* root2) {
+    TermElement* sum = NULL; // create our new list
+    while (root1 != NULL) { // add all terms from root1
+        sum = addTerm(sum, root1->degree, root1->coefficient);
+        root1 = root1->next;
+    }
+    while (root2 != NULL) {
+        sum = addTerm(sum, root2->degree, root2->coefficient);
+        root2 = root2->next;
+    }
+    return sum; // add all terms from root1
+}
+
+TermElement* multiplyPolynomials (TermElement* root1, TermElement* root2) {
+    TermElement* product = NULL; // create our new list
+    TermElement* itr1 = root1; // create iterator for root1
+    while (root2 != NULL) { // for each term in root2
+        while (itr1 != NULL) { // add each product node for root1
+            product = addTerm(product, root2->degree * itr1->degree, root2->coefficient * itr1->coefficient);
+            itr1 = itr1->next;
+        }
+        itr1 = root1; // reset root1 iterator
+        root2 = root2->next;
+    }
+    return product;
+}
+
 TermElement* derivative (TermElement* root) {
     if (root == NULL)
         return NULL;
@@ -106,12 +133,18 @@ void freeList (TermElement* root) {
 
 int main (void) {
     // main is where i do testing, i imagine you will do it here as well
-    TermElement* test = addTerm(NULL, 214292321, 1);
+    TermElement* test = addTerm(NULL, 2, 1);
     test = addTerm(test, 3, 5);
     test = addTerm(test, 1, -5);
+    TermElement* test2 = addTerm(NULL, 3, 2);
+    test2 = addTerm(test2, 8, 5);
     TermElement* testdir = derivative(test);
     TermElement* testdirdir = derivative(testdir);
     printPolyNomial(test);
     printPolyNomial(testdir);
     printPolyNomial(testdirdir);
+    printPolyNomial(test);
+    printPolyNomial(test2);
+    printPolyNomial(addPolynomials(test, test2));
+    printPolyNomial(multiplyPolynomials(test, test2));
 }
