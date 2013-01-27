@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 #include <stdlib.h>
 
@@ -85,6 +86,16 @@ TermElement* derivative (TermElement* root) {
     return deriv; //return our list
 }
 
+void printPolyNomial(TermElement* root) {
+    cout << "Coefficient | Degree" << endl 
+         << "--------------------" << endl; // print table header
+    while (root != NULL) {
+        cout << setw(12) << root->coefficient << '|' << root->degree << endl; // print value for each entry setw sets field size
+        root = root->next;
+    }
+    cout << endl;
+}
+
 void freeList (TermElement* root) {
     while (root != NULL) { // loop through list free storing next and freeing head until there is no head to free
         TermElement* temp = root;
@@ -95,24 +106,12 @@ void freeList (TermElement* root) {
 
 int main (void) {
     // main is where i do testing, i imagine you will do it here as well
-    TermElement* test = addTerm(NULL, 2, 2);
+    TermElement* test = addTerm(NULL, 214292321, 1);
     test = addTerm(test, 3, 5);
     test = addTerm(test, 1, -5);
-    cout << evaluatePolynomial(test, 3) << endl;
     TermElement* testdir = derivative(test);
     TermElement* testdirdir = derivative(testdir);
-    while (test != NULL) {
-        cout << test->degree << "\t" << test->coefficient << endl;
-        test = test->next;
-    }
-    cout << evaluatePolynomial(testdir, 3) << endl;
-    while (testdir != NULL) {
-        cout << testdir->degree << "\t" << testdir->coefficient << endl;
-        testdir = testdir->next;
-    }
-    cout << evaluatePolynomial(testdirdir, 3) << endl;
-    while (testdirdir != NULL) {
-        cout << testdirdir->degree << "\t" << testdirdir->coefficient << endl;
-        testdirdir = testdirdir->next;
-    }
+    printPolyNomial(test);
+    printPolyNomial(testdir);
+    printPolyNomial(testdirdir);
 }
