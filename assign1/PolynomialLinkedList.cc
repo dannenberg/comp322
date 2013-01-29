@@ -28,7 +28,7 @@ TermElement* addTerm (TermElement* root, int degree, double coefficient) {
         root->coefficient += coefficient;
         if (root->coefficient == 0) { // element root node since coefficient is 0, return rest of list
             TermElement* toR = root->next;
-            free(root);
+            delete root;
             return toR;
         }
     }
@@ -47,9 +47,9 @@ TermElement* addTerm (TermElement* root, int degree, double coefficient) {
             if (cur->next != NULL && cur->next->degree == degree) { // a node of the same degree exists, sum the coefficients
                 cur->next->coefficient += coefficient;
                 if (cur->next->coefficient == 0) { // if the new coefficient is zero, remove the term
-                    TermElement* temp = cur->next; // save the term to free it
+                    TermElement* temp = cur->next; // save the term to delete
                     cur->next = cur->next->next; // change pointer to skip over it
-                    free(temp); // free the term
+                    delete temp; // delete term
                 }
             }
             else { // creating a new term
