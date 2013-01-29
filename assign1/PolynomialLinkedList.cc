@@ -19,7 +19,7 @@ double evaluate (TermElement* root, double x) {
 
 TermElement* addTerm (TermElement* root, int degree, double coefficient) {
     if (root == NULL) { // no polynomial
-        root = (TermElement*) malloc(sizeof(TermElement)); // create node, to be return
+        root = new TermElement; // create node, to be return
         root->degree = degree; // populate new node
         root->coefficient = coefficient;
         root->next = NULL;
@@ -35,7 +35,7 @@ TermElement* addTerm (TermElement* root, int degree, double coefficient) {
     else { // modifying an existing polynomial
         TermElement* cur = root;
         if (cur->degree < degree) { // the new node should be root
-            root = (TermElement*) malloc(sizeof(TermElement)); // create node, to be return as root
+            root = new TermElement; // create node, to be return as root
             root->degree = degree;
             root->coefficient = coefficient;
             root->next = cur;
@@ -53,7 +53,7 @@ TermElement* addTerm (TermElement* root, int degree, double coefficient) {
                 }
             }
             else { // creating a new term
-                TermElement* newNode = (TermElement*) malloc(sizeof(TermElement)); // create node
+                TermElement* newNode = new TermElement; // create node
                 newNode->degree = degree; // populate
                 newNode->coefficient = coefficient;
                 newNode->next = cur->next; // point it to next
