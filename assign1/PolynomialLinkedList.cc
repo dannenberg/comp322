@@ -17,7 +17,7 @@ double evaluate (TermElement* root, double x) {
     return pow(x, root->degree) * root->coefficient; // return value of the term at that point
 }
 
-TermElement* addTerm (TermElement* root, int degree, double coefficient) {
+TermElement* addTerm (TermElement* root, double coefficient, int degree) {
     if (root == NULL) { // no polynomial
         root = new TermElement; // create node, to be return
         root->degree = degree; // populate new node
@@ -76,11 +76,11 @@ double evaluatePolynomial (TermElement* root, double x) {
 TermElement* addPolynomials (TermElement* root1, TermElement* root2) {
     TermElement* sum = NULL; // create our new list
     while (root1 != NULL) { // add all terms from root1
-        sum = addTerm(sum, root1->degree, root1->coefficient);
+        sum = addTerm(sum, root1->coefficient, root1->degree);
         root1 = root1->next;
     }
     while (root2 != NULL) {
-        sum = addTerm(sum, root2->degree, root2->coefficient);
+        sum = addTerm(sum, root2->coefficient, root2->degree);
         root2 = root2->next;
     }
     return sum; // add all terms from root1
@@ -91,7 +91,7 @@ TermElement* multiplyPolynomials (TermElement* root1, TermElement* root2) {
     TermElement* itr1 = root1; // create iterator for root1
     while (root2 != NULL) { // for each term in root2
         while (itr1 != NULL) { // add each product node for root1
-            product = addTerm(product, root2->degree * itr1->degree, root2->coefficient * itr1->coefficient);
+            product = addTerm(product, root2->coefficient * itr1->coefficient, root2->degree * itr1->degree);
             itr1 = itr1->next;
         }
         itr1 = root1; // reset root1 iterator
@@ -103,11 +103,11 @@ TermElement* multiplyPolynomials (TermElement* root1, TermElement* root2) {
 TermElement* derivative (TermElement* root) {
     if (root == NULL)
         return NULL;
-    TermElement* deriv = addTerm(NULL, root->degree-1, root->coefficient * root->degree); // start derivative list
+    TermElement* deriv = addTerm(NULL, root->coefficient * root->degree, root->degree-1); // start derivative list
     while (root->next != NULL) { // for each term in the original polynomial, takes it derivative
         root = root->next;
         if (root->coefficient * root->degree != 0) { // only create a non-trivial node (coefficient != 0)
-            deriv = addTerm(deriv, root->degree-1, root->coefficient * root->degree);
+            deriv = addTerm(deriv, root->coefficient * root->degree, root->degree-1);
         }
     }
     return deriv; //return our list
@@ -140,11 +140,10 @@ int main (void) {
     test2 = addTerm(test2, 8, 5);
     TermElement* testdir = derivative(test);
     TermElement* testdirdir = derivative(testdir);
+    printPolyNomial(test2);
     printPolyNomial(test);
     printPolyNomial(testdir);
     printPolyNomial(testdirdir);
-    printPolyNomial(test);
-    printPolyNomial(test2);
     printPolyNomial(addPolynomials(test, test2));
     printPolyNomial(multiplyPolynomials(test, test2));
 }
