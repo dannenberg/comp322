@@ -1,0 +1,1 @@
+I did the bonus stuff. I also did some refactoring without extensive testing... So if there are issues (unlikely?), let me know and I can add you to my git repo so you can pull an earlier commit and test there.
