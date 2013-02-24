@@ -10,16 +10,16 @@ using namespace std;
 struct Variable {
     string name;
     double value;
-
 };
 
-bool operator==(const Variable& l, const Variable& r) {
-    return l.name == r.name;
+// this is to be able to look up a variable in our vector by name using find
+bool operator==(const Variable& l, const string& r) {
+    return l.name == r;
 }
 
 struct Memory {
     vector<string> instructions;
-    int position;
+    unsigned position;
     vector<Variable> variables;
 };
 
@@ -33,19 +33,21 @@ int parseFile(ifstream &in_file, Memory *sysmem) {
         if (line.length() == 0) // skip blank lines because i am getting blank line before eof somehow..
             continue;
         istringstream elems(line);
-        // cout << line << endl;
 
         string elem;
         elems >> elem;
         if (elem == "SET") {
-            // capture our var
+            // add variable if it doesnt exist
             elems >> elem;
-            Variable var;
-            var.name = elem;
-            // make we have the =
+            if (find(sysmem->variables.begin(), sysmem->variables.end(), elem) == sysmem->variables.end()) {
+                Variable var;
+                var.name = elem;
+                sysmem->variables.push_back(var);
+            }
+            // make sure we have the =
             elems >> elem;
             if (elem != "=") {
-                cerr << "Error: no equal in SET experssion: " << line << endl;
+                cerr << "Error: no = in SET experssion: " << line << endl;
                 return -1;
             }
             // make sure we are assigned to int or valid variable
@@ -53,24 +55,16 @@ int parseFile(ifstream &in_file, Memory *sysmem) {
             istringstream is_dub(elem);
             double d;
             if (!(is_dub >> d)) {
-                // its not a double so check that we have the variable
-                Variable var2;
-                var2.name = elem;
-                if (find(sysmem->variables.begin(), sysmem->variables.end(), var2) == sysmem->variables.end()) {
+                // its not a double so check that we have that variable
+                if (find(sysmem->variables.begin(), sysmem->variables.end(), elem) == sysmem->variables.end()) {
                     cerr << "Error: righthand variable does not exist: " << line << endl;
                     return -1;
                 }
             }
             sysmem->instructions.push_back(line); // add cuz its valid
-            // create variable if it does not yet exist
-            if (find(sysmem->variables.begin(), sysmem->variables.end(), var) == sysmem->variables.end()) {
-                sysmem->variables.push_back(var);
-            }
         } else if (elem == "PRINT") {
             elems >> elem;
-            Variable var;
-            var.name = elem; // if the variable to be printed is in memory, push instruction, else error and exit
-            if (find(sysmem->variables.begin(), sysmem->variables.end(), var) != sysmem->variables.end()) {
+            if (find(sysmem->variables.begin(), sysmem->variables.end(), elem) != sysmem->variables.end()) {
                 sysmem->instructions.push_back(line);
             } else {
                 cerr << "Error: cannot PRINT variable that has not be instantiated: " << line << endl;
@@ -91,31 +85,25 @@ int runInstructions(Memory *sysmem) {
         string elem;
         line >> elem;
         if (elem == "SET") {
-            Variable var;
-            line >> var.name;
-            vector<Variable>::iterator changing_var = find(sysmem->variables.begin(), sysmem->variables.end(), var);
+            line >> elem;
+            vector<Variable>::iterator changing_var = find(sysmem->variables.begin(), sysmem->variables.end(), elem);
             line >> elem; // skip over the equals
             line >> elem;
             istringstream is_dub(elem);
             double d;
             if (is_dub >> d) {
                 changing_var->value = d;
-                cout << changing_var->name << " set to " << d << endl;
             } else {
-                Variable var2;
-                var2.name = elem;
-                vector<Variable>::iterator var_with_val = find(sysmem->variables.begin(), sysmem->variables.end(), var2);
+                vector<Variable>::iterator var_with_val = find(sysmem->variables.begin(), sysmem->variables.end(), elem);
                 changing_var->value = var_with_val->value;
-                cout << changing_var->name << " set to " << var_with_val->value << endl;
             }
         } else if (elem == "PRINT") {
             line >> elem;
-            Variable var;
-            var.name = elem; // if the variable to be printed is in memory, push instruction, else error and exit
-            vector<Variable>::iterator printing_var = find(sysmem->variables.begin(), sysmem->variables.end(), var);
+            vector<Variable>::iterator printing_var = find(sysmem->variables.begin(), sysmem->variables.end(), elem);
             cout << printing_var->value << endl;
         }
     }
+    return 0;
 }
 
 
