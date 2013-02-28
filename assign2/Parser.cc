@@ -88,7 +88,7 @@ int parseFile(ifstream &in_file, Memory &sysmem) {
 
 
 int runInstructions(Memory &sysmem) {
-    for (; sysmem.position < sysmem.instructions.size(); sysmem.position++) {
+    for (sysmem.position = 0; sysmem.position < sysmem.instructions.size(); sysmem.position++) {
         istringstream line(sysmem.instructions[sysmem.position]);
         string elem;
         line >> elem;
