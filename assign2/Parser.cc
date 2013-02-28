@@ -47,7 +47,7 @@ int parseFile(ifstream &in_file, Memory &sysmem) {
             // make sure we have the =
             elems >> elem;
             if (elem != "=") {
-                cerr << "Error: no = in SET experssion: " << line << endl;
+                cerr << "Error in SET experssion: " << line << endl;
                 return -1;
             }
             // make sure we are assigned to int or valid variable
