@@ -24,7 +24,7 @@ struct Memory {
 };
 
 
-int parseFile(ifstream &in_file, Memory *sysmem) {
+int parseFile(ifstream &in_file, Memory &sysmem) {
     while (!in_file.eof()) {
         string line;
         getline(in_file, line);
@@ -39,10 +39,10 @@ int parseFile(ifstream &in_file, Memory *sysmem) {
         if (elem == "SET") {
             // add variable if it doesnt exist
             elems >> elem;
-            if (find(sysmem->variables.begin(), sysmem->variables.end(), elem) == sysmem->variables.end()) {
+            if (find(sysmem.variables.begin(), sysmem.variables.end(), elem) == sysmem.variables.end()) {
                 Variable var;
                 var.name = elem;
-                sysmem->variables.push_back(var);
+                sysmem.variables.push_back(var);
             }
             // make sure we have the =
             elems >> elem;
@@ -56,7 +56,7 @@ int parseFile(ifstream &in_file, Memory *sysmem) {
             double d;
             if (!(is_dub >> d)) {
                 // its not a double so check that we have that variable
-                if (find(sysmem->variables.begin(), sysmem->variables.end(), elem) == sysmem->variables.end()) {
+                if (find(sysmem.variables.begin(), sysmem.variables.end(), elem) == sysmem.variables.end()) {
                     cerr << "Error: righthand variable does not exist: " << line << endl;
                     return -1;
                 }
@@ -65,11 +65,11 @@ int parseFile(ifstream &in_file, Memory *sysmem) {
                 cerr << "Error: extra garbage after SET expression: " << line << endl;
                 return -1;
             }
-            sysmem->instructions.push_back(line); // add cuz its valid
+            sysmem.instructions.push_back(line); // add cuz its valid
         } else if (elem == "PRINT") {
             elems >> elem;
-            if (find(sysmem->variables.begin(), sysmem->variables.end(), elem) != sysmem->variables.end()) {
-                sysmem->instructions.push_back(line);
+            if (find(sysmem.variables.begin(), sysmem.variables.end(), elem) != sysmem.variables.end()) {
+                sysmem.instructions.push_back(line);
             } else {
                 cerr << "Error: cannot PRINT variable that has not be instantiated: " << line << endl;
                 return -1;
@@ -87,14 +87,14 @@ int parseFile(ifstream &in_file, Memory *sysmem) {
 }
 
 
-int runInstructions(Memory *sysmem) {
-    for (; sysmem->position < sysmem->instructions.size(); sysmem->position++) {
-        istringstream line(sysmem->instructions[sysmem->position]);
+int runInstructions(Memory &sysmem) {
+    for (; sysmem.position < sysmem.instructions.size(); sysmem.position++) {
+        istringstream line(sysmem.instructions[sysmem.position]);
         string elem;
         line >> elem;
         if (elem == "SET") {
             line >> elem;
-            vector<Variable>::iterator changing_var = find(sysmem->variables.begin(), sysmem->variables.end(), elem);
+            vector<Variable>::iterator changing_var = find(sysmem.variables.begin(), sysmem.variables.end(), elem);
             line >> elem; // skip over the equals
             line >> elem;
             istringstream is_dub(elem);
@@ -102,12 +102,12 @@ int runInstructions(Memory *sysmem) {
             if (is_dub >> d) {
                 changing_var->value = d;
             } else {
-                vector<Variable>::iterator var_with_val = find(sysmem->variables.begin(), sysmem->variables.end(), elem);
+                vector<Variable>::iterator var_with_val = find(sysmem.variables.begin(), sysmem.variables.end(), elem);
                 changing_var->value = var_with_val->value;
             }
         } else if (elem == "PRINT") {
             line >> elem;
-            vector<Variable>::iterator printing_var = find(sysmem->variables.begin(), sysmem->variables.end(), elem);
+            vector<Variable>::iterator printing_var = find(sysmem.variables.begin(), sysmem.variables.end(), elem);
             cout << printing_var->value << endl;
         }
     }
@@ -129,7 +129,7 @@ int main(int argc, char ** argv) {
     }
 
     // check through file line by line
-    Memory *sysmem = new Memory;
+    Memory sysmem;
     if (parseFile(in_file, sysmem)) { // successful call returns 0
         cerr << "Error: execution failed while parsing file" << endl;
         return -1;
