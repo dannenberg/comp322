@@ -61,6 +61,10 @@ int parseFile(ifstream &in_file, Memory *sysmem) {
                     return -1;
                 }
             }
+            if (elems >> elem) {
+                cerr << "Error: extra garbage after SET expression: " << line << endl;
+                return -1;
+            }
             sysmem->instructions.push_back(line); // add cuz its valid
         } else if (elem == "PRINT") {
             elems >> elem;
@@ -68,6 +72,10 @@ int parseFile(ifstream &in_file, Memory *sysmem) {
                 sysmem->instructions.push_back(line);
             } else {
                 cerr << "Error: cannot PRINT variable that has not be instantiated: " << line << endl;
+                return -1;
+            }
+            if (elems >> elem) {
+                cerr << "Error: extra garbage after PRINT expression: " << line << endl;
                 return -1;
             }
         } else {
