@@ -1,11 +1,9 @@
 #include "Players.h"
 
 RockPlayer::RockPlayer(int x) {
-    player_num = x;
-}
-
-string RockPlayer::getName() {
-    return "RockPlayer #" + player_num;
+    ostringstream oss;
+    oss << "RockPlayer #" << x;
+    name = oss.str();
 }
 
 RockPaperScissorChoice RockPlayer::chooseMove() {
@@ -13,11 +11,9 @@ RockPaperScissorChoice RockPlayer::chooseMove() {
 }
 
 PaperPlayer::PaperPlayer(int x) {
-    player_num = x;
-}
-
-string PaperPlayer::getName() {
-    return "PaperPlayer #" + player_num;
+    ostringstream oss;
+    oss << "PaperPlayer #" << x;
+    name = oss.str();
 }
 
 RockPaperScissorChoice PaperPlayer::chooseMove() {
@@ -25,11 +21,9 @@ RockPaperScissorChoice PaperPlayer::chooseMove() {
 }
 
 ScissorPlayer::ScissorPlayer(int x) {
-    player_num = x;
-}
-
-string ScissorPlayer::getName() {
-    return "ScissorPlayer #" + player_num;
+    ostringstream oss;
+    oss << "ScissorPlayer #" << x;
+    name = oss.str();
 }
 
 RockPaperScissorChoice ScissorPlayer::chooseMove() {
@@ -37,11 +31,9 @@ RockPaperScissorChoice ScissorPlayer::chooseMove() {
 }
 
 RandomPlayer::RandomPlayer(int x) {
-    player_num = x;
-}
-
-string RandomPlayer::getName() {
-    return "RandomPlayer #" + player_num;
+    ostringstream oss;
+    oss << "RandomPlayer #" << x;
+    name = oss.str();
 }
 
 RockPaperScissorChoice RandomPlayer::chooseMove() {
