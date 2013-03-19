@@ -37,5 +37,15 @@ RandomPlayer::RandomPlayer(int x) {
 }
 
 RockPaperScissorChoice RandomPlayer::chooseMove() {
-    return ROCK; // TODO make random
+    int choice = rand()%3;
+    switch (choice) {
+        case 0:
+            return ROCK;
+        case 1:
+            return PAPER;
+        case 2:
+            return SCISSOR;
+        default: // cant occur, but to be safe...
+            return ROCK;
+    }
 }
