@@ -58,12 +58,12 @@ int main (void) {
             while (ties < 3) {
                 if (result == PLAYERONEWIN) { // p1 wins move him along
                     next_round.push_back(p1);
-                    free(p2);
+                    delete(p2);
                     break;
                 }
                 else if (result == PLAYERTWOWIN) { // p2 wins move him along
                     next_round.push_back(p2);
-                    free(p1);
+                    delete(p1);
                     break;
                 }
                 else { // tie
@@ -76,8 +76,8 @@ int main (void) {
                 }
             }
             if (ties >= 3) { // too many ties both must die
-                free(p1);
-                free(p2);
+                delete(p1);
+                delete(p2);
             }
         }
         cur_round.swap(next_round); // make next round current
@@ -87,7 +87,7 @@ int main (void) {
         RPSPlayer* winner = cur_round.front();
         cout << "We had a winner, " << winner->name << endl;
         cur_round.empty();
-        free(winner);
+        delete(winner);
     }
     else {
         cout << "There was a tie in the final round so there is no winnner" << endl;
