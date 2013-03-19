@@ -49,7 +49,12 @@ int main (void) {
             cur_round.erase(cur_round.begin());
             int ties = 0;
 
-            Result result = RPSPlayer::evaluatePlay(p1->chooseMove(), p2->chooseMove());
+            RockPaperScissorChoice p1choice = p1->chooseMove();
+            RockPaperScissorChoice p2choice = p2->chooseMove();
+            Result result = RPSPlayer::evaluatePlay(p1choice, p2choice);
+            p1->addRound(p1choice, p2choice);
+            p2->addRound(p2choice, p1choice);
+
             while (ties < 3) {
                 if (result == PLAYERONEWIN) { // p1 wins move him along
                     next_round.push_back(p1);
@@ -62,8 +67,12 @@ int main (void) {
                     break;
                 }
                 else { // tie
-                    result = RPSPlayer::evaluatePlay(p1->chooseMove(), p2->chooseMove());
                     ties++;
+                    p1choice = p1->chooseMove();
+                    p2choice = p2->chooseMove();
+                    result = RPSPlayer::evaluatePlay(p1choice, p2choice);
+                    p1->addRound(p1choice, p2choice);
+                    p2->addRound(p2choice, p1choice);
                 }
             }
             if (ties >= 3) { // too many ties both must die
