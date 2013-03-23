@@ -49,3 +49,55 @@ RockPaperScissorChoice RandomPlayer::chooseMove() {
             return ROCK;
     }
 }
+
+CyclePlayer::CyclePlayer(int x) {
+    ostringstream oss;
+    oss << "CyclePlayer #" << x;
+    name = oss.str();
+}
+
+RockPaperScissorChoice CyclePlayer::chooseMove() {
+    a++;
+    switch (a%3) {
+        case 0:
+            return ROCK;
+        case 1:
+            return PAPER;
+        case 2:
+            return SCISSOR;
+        default: // cant occur, but to be safe...
+            return ROCK;
+    }
+}
+
+BeatPreviousPlayer::BeatPreviousPlayer(int x) {
+    ostringstream oss;
+    oss << "BeatPreviousPlayer #" << x;
+    name = oss.str();
+}
+
+RockPaperScissorChoice BeatPreviousPlayer::chooseMove() {
+    if (myOpponentMoves.size() > 0) {
+        switch (myOpponentMoves.back()) {
+            case SCISSOR:
+                return ROCK;
+            case ROCK:
+                return PAPER;
+            case PAPER:
+                return SCISSOR;
+        }
+    }
+    else { // if no previous moves, do random
+        int choice = rand()%3;
+        switch (choice) {
+            case 0:
+                return ROCK;
+            case 1:
+                return PAPER;
+            case 2:
+                return SCISSOR;
+            default: // cant occur, but to be safe...
+                return ROCK;
+        }
+    }
+}

@@ -16,7 +16,7 @@ int main (void) {
     srand(time(NULL));
     cout << "Creating 128 players of assorted types." << endl;
     for (int i = 0; i < 128; i++) {
-        int type = rand()%4;
+        int type = rand()%6;
         switch (type) {
             case 0:
                 cur = new RockPlayer(i);
@@ -29,6 +29,12 @@ int main (void) {
                 break;
             case 3:
                 cur = new RandomPlayer(i);
+                break;
+            case 4:
+                cur = new CyclePlayer(i);
+                break;
+            case 5:
+                cur = new BeatPreviousPlayer(i);
                 break;
         }
         cur_round.push_back(cur);
